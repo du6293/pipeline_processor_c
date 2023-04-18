@@ -194,14 +194,14 @@ int main (int argc, char *argv[]) {
 			else if (wb.opcode == 0x03 && wb.funct3 == 0x04) 	rd_din = (wb.dmem_dout & 0x000000ff);     // lbu
 			else if (wb.opcode == 0x03 && wb.funct3 == 0x05) 	rd_din = (wb.dmem_dout & 0x0000ffff);     // lhu
 		} else {
-			if 		(wb.opcode == 0x33)					 		rd_din = wb.alu_result;  // r-type
+			if 		(wb.opcode == 0x33)					rd_din = wb.alu_result;  // r-type
 			else if (wb.opcode == 0x13) 						rd_din = wb.alu_result;  // i-type
 			else if (wb.opcode == 0x63) 						rd_din = wb.pc + 4; 	// sb-type
 			else if (wb.opcode == 0x6f) 						rd_din = wb.pc + 4; 	 // jal
 			else if (wb.opcode == 0x67) 						rd_din = wb.pc + 4;		//jalr
 			else if (wb.opcode == 0x37)  						rd_din = wb.alu_result;  //lui
 			else if (wb.opcode == 0x17) 						rd_din = wb.alu_result;  // auipc
-			else												rd_din = wb.alu_result;	// etc
+			else									rd_din = wb.alu_result;	// etc
 		}
 		
 		reg_in.rd_din = rd_din;
@@ -227,7 +227,7 @@ int main (int argc, char *argv[]) {
 		// 10.data memory
 		dmem_addr = mem.alu_result >> 2;
 		if (mem.mem_write) {
-			if (mem.funct3 == 0x0)			dmem_din = (mem.rs2_dout & 0x000000ff); // sb R[rs2][7:0]
+			if (mem.funct3 == 0x0)		dmem_din = (mem.rs2_dout & 0x000000ff); // sb R[rs2][7:0]
 			else if (mem.funct3 == 0x1) 	dmem_din = (mem.rs2_dout & 0x0000ffff); // sh R[rs2][15:0]
 			else if (mem.funct3 == 0x2) 	dmem_din = (mem.rs2_dout); // sw R[rs2][31:0] 
 		}
@@ -321,22 +321,22 @@ int main (int argc, char *argv[]) {
 			else if(ex.funct3 == 0x05 && ex.funct7 == 0x20) alu_control = 6 ;  // sra, srai signed right shift
 			else if(ex.funct3 == 0x00) {
 				if (ex.funct7 == 0x20) 						alu_control = 7 ; //sub
-				else 										alu_control = 2 ; //add, addi
+				else 								alu_control = 2 ; //add, addi
 			}
 			else if (ex.funct3 == 0x04) 					alu_control = 3; //xor,xori
 			else if (ex.funct3 == 0x06) 					alu_control = 1; //or,ori
-			else if (ex.funct3 == 0x07)						alu_control = 0; //and,andi
+			else if (ex.funct3 == 0x07)					alu_control = 0; //and,andi
 			else if (ex.funct3 == 0x02) 					alu_control = 8; //slt,slti
-			else if (ex.funct3 == 0x03)						alu_control = 9; //sltu,sltiu
+			else if (ex.funct3 == 0x03)					alu_control = 9; //sltu,sltiu
 		}
 
 		
 		// 8. fowrarding unit
-		if 		(forward_a == 0)			alu_fwd_in1 = ex.rs1_dout;
+		if 		(forward_a == 0)		alu_fwd_in1 = ex.rs1_dout;
 		else if (forward_a == 2)			alu_fwd_in1 = mem.alu_result;
 		else if (forward_a == 1)			alu_fwd_in1 = (mem.mem_to_reg==1) ? wb.dmem_dout : (mem.reg_write == 1) ? wb.alu_result : 0	;
 		
-		if 		(forward_b == 0)			alu_fwd_in2 = ex.rs2_dout;
+		if 		(forward_b == 0)		alu_fwd_in2 = ex.rs2_dout;
 		else if (forward_b == 2)			alu_fwd_in2 = mem.alu_result;
 		else if (forward_b == 1)			alu_fwd_in2 = (mem.mem_to_reg==1) ? wb.dmem_dout : (mem.reg_write == 1) ? wb.alu_result : 0	;
 		
@@ -365,14 +365,14 @@ int main (int argc, char *argv[]) {
 		bu_zero = (sub_for_branch == 0 )? 1 : 0;
 		bu_sign = (sub_for_branch >> 31);
 		
-		if (ex.branch[0] == 1 && bu_zero == 1)							branch_taken = 1;//beq
-		else if (ex.branch[1] == 1 && bu_zero == 0)						branch_taken = 1;//bne
+		if (ex.branch[0] == 1 && bu_zero == 1)					branch_taken = 1;//beq
+		else if (ex.branch[1] == 1 && bu_zero == 0)				branch_taken = 1;//bne
 		else if (ex.branch[2] == 1 && bu_zero == 0 && bu_sign == 1)		branch_taken = 1;//blt
-		else if (ex.branch[3] == 1 && bu_sign == 0)						branch_taken = 1;//bge
+		else if (ex.branch[3] == 1 && bu_sign == 0)				branch_taken = 1;//bge
 		else if (ex.branch[4] == 1 && bu_zero == 0 && bu_sign == 1)		branch_taken = 1;//bltu
-		else if (ex.branch[5] == 1 && bu_sign == 0)						branch_taken = 1;//bgeu
-		else if (ex.opcode == 0x6f || ex.opcode == 0x67)			 	branch_taken = 1;//jal, jalr
-		else															branch_taken = 0;//don't jump
+		else if (ex.branch[5] == 1 && bu_sign == 0)				branch_taken = 1;//bgeu
+		else if (ex.opcode == 0x6f || ex.opcode == 0x67)			branch_taken = 1;//jal, jalr
+		else									branch_taken = 0;//don't jump
 		
 		
 	/*2****************************************************************************************************************************************************	
@@ -393,11 +393,10 @@ int main (int argc, char *argv[]) {
 		
 		opcode = id.inst & 0x0000007f;
 		if (opcode == 0x37 || opcode == 0x17 ) 	  funct3 = 0;
-		else 									  funct3 = (id.inst >> 12) & 0x00007;
+		else 							  funct3 = (id.inst >> 12) & 0x00007;
 
 		if (opcode == 0x33 ) 					  funct7 = (id.inst >> 25) & 0x7f;
-		else 									  funct7 = 0; 
-		
+		else 							  funct7 = 0; 
 		
 		
 		if 	(opcode == 0x63 && funct3 == 0x0) 	  branch[0] = 1; // beq
@@ -420,30 +419,28 @@ int main (int argc, char *argv[]) {
 		
 		
 		if (opcode == 0x03)		mem_read = 1; // load
-		else 					mem_read = 0;
+		else 				mem_read = 0;
 		
 		if (opcode == 0x23)		mem_write = 1; // store
-		else 					mem_write = 0;
+		else 				mem_write = 0;
 		
 		if (opcode == 0x03)		mem_to_reg = 1; // load
-		else					mem_to_reg = 0;
+		else				mem_to_reg = 0;
 		
 		reg_write = (opcode == 0x03 || opcode == 0x33 || opcode == 0x13 || opcode == 0x63 || opcode == 0x67 || opcode == 0x37 || opcode == 0x6f || opcode == 0x17) ? 1 : 0;  // except for store 
 		alu_src = (opcode == 0x3 || opcode == 0x23 || opcode == 0x13 || opcode == 0x67 || opcode == 0x6f || opcode == 0x37 || opcode == 0x17) ? 1 : 0 ;  // rs2_dout에 imm?  rs2
 			
 		
 		
-		if      (opcode == 0x03) 			alu_op = 0;         //load -> add
-		else if (opcode == 0x23) 			alu_op = 0;			//store -> add
-		else if (opcode == 0x33) 			alu_op = 2;			//r-type  
-		else if (opcode == 0x13) 			alu_op = 2;			// i-type
-		else if (opcode == 0x63) 			alu_op = 1;          // sb   -> sub
-		else if (opcode == 0x37) 			alu_op = 3;			// lui
-		else 	                 			alu_op = 0;         // auipc, jal, jalr
-			
+		if      (opcode == 0x03) 			alu_op = 0;         	// load -> add
+		else if (opcode == 0x23) 			alu_op = 0;		// store -> add
+		else if (opcode == 0x33) 			alu_op = 2;		// r-type  
+		else if (opcode == 0x13) 			alu_op = 2;		// i-type
+		else if (opcode == 0x63) 			alu_op = 1;          	// sb   -> sub
+		else if (opcode == 0x37) 			alu_op = 3;		// lui
+		else 	                 			alu_op = 0;         	// auipc, jal, jalr
 			
 		
-			
 		// 4. immediate generator
 		
 		if (opcode == 0x13){                /////// i-type 
@@ -483,10 +480,7 @@ int main (int argc, char *argv[]) {
 		}
 		else imm12 = 0;
 		
-		
-		
-		
-		
+
 		if(opcode == 0x03 || opcode == 0x67){  // load,  jalr imm12 -> imm32
 			if (((int32_t)imm12 >> 11) &1== 1)	imm32 = (imm12 & 0xfff) | 0xfffff000;
 			else							 	imm32 = imm12 & 0x00000fff;
@@ -518,9 +512,7 @@ int main (int argc, char *argv[]) {
 		else if (opcode == 0x17) 				imm32 = imm20 << 12;            // auipc, imm20 -> imm32
 
 
-		
-		
-		
+
 		// computing branch target
 		if (opcode == 0x67)		 pc_next_branch = mem.alu_result;  // jalr
 		else if (opcode == 0x6f) {   // jal
