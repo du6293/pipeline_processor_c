@@ -529,11 +529,11 @@ int main (int argc, char *argv[]) {
 
 		if (opcode == 0x23||opcode == 0x33||opcode == 0x13||opcode ==0x63||opcode == 0x67)		rs1 = ((id.inst >> 15) & 0x1f); 
 		// load, store, r-type, i-type, sb-type, jalr
-		else if (opcode == 0x03)																rs1 = ((id.inst >> 15) & 0x1f);
+		else if (opcode == 0x03)									rs1 = ((id.inst >> 15) & 0x1f);
 		else 																									rs1 =0;
 		
 		if (opcode == 0x23||opcode ==0x33||opcode ==0x63)						rs2 = ((id.inst >> 20) & 0x0001f); // store, r-type, sb-type
-		else																	rs2 = 0;
+		else												rs2 = 0;
 		
 		if (opcode == 0x03||opcode == 0x33|| opcode == 0x13|| opcode ==0x37||opcode == 0x17||opcode == 0x6f|| opcode == 0x67)	rd = ((id.inst >>7) & 0x000001f); // load, r-type, i-type, lui,auipc,jal,jalr
 		else																													rd = 0; 
