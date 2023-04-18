@@ -400,22 +400,22 @@ int main (int argc, char *argv[]) {
 		
 		
 		if 	(opcode == 0x63 && funct3 == 0x0) 	  branch[0] = 1; // beq
-		else 									  branch[0] = 0;
+		else 						  branch[0] = 0;
 		
-		if (opcode == 0x63 && funct3 == 0x1) 	  branch[1] = 1; // bne
-		else 									  branch[1] = 0;
+		if (opcode == 0x63 && funct3 == 0x1) 	  	branch[1] = 1; // bne
+		else 						branch[1] = 0;
 		
 		if (opcode == 0x63 && funct3 == 0x4) 	  branch[2] = 1; // blt
-		else 									  branch[2] = 0;
+		else 					  branch[2] = 0;
 		
 		if (opcode == 0x63 && funct3 == 0x5) 	  branch[3] = 1; // bge
-		else 									  branch[3] = 0;
+		else 					  branch[3] = 0;
 		
 		if (opcode == 0x63 && funct3 == 0x6) 	  branch[4] = 1; // bltu
-		else 									  branch[4] = 0;
+		else 					  branch[4] = 0;
 		
 		if (opcode == 0x63 && funct3 == 0x7) 	  branch[5] = 1; // bgeu
-		else 									  branch[5] = 0;
+		else 					  branch[5] = 0;
 		
 		
 		if (opcode == 0x03)		mem_read = 1; // load
@@ -430,8 +430,7 @@ int main (int argc, char *argv[]) {
 		reg_write = (opcode == 0x03 || opcode == 0x33 || opcode == 0x13 || opcode == 0x63 || opcode == 0x67 || opcode == 0x37 || opcode == 0x6f || opcode == 0x17) ? 1 : 0;  // except for store 
 		alu_src = (opcode == 0x3 || opcode == 0x23 || opcode == 0x13 || opcode == 0x67 || opcode == 0x6f || opcode == 0x37 || opcode == 0x17) ? 1 : 0 ;  // rs2_dout에 imm?  rs2
 			
-		
-		
+
 		if      (opcode == 0x03) 			alu_op = 0;         	// load -> add
 		else if (opcode == 0x23) 			alu_op = 0;		// store -> add
 		else if (opcode == 0x33) 			alu_op = 2;		// r-type  
@@ -510,7 +509,6 @@ int main (int argc, char *argv[]) {
 		}           
 		else if (opcode == 0x37) 				imm32 = imm20 << 12;            // lui, imm20-> imm32
 		else if (opcode == 0x17) 				imm32 = imm20 << 12;            // auipc, imm20 -> imm32
-
 
 
 		// computing branch target
