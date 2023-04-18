@@ -24,8 +24,6 @@ Wb wb;
 
 
 
-
-
 Imem_out imem ( Imem_in imem_in, uint32_t *imem_data){
 	Imem_out result;
 	result.inst = imem_in.imem_data[imem_in.imem_addr];
@@ -57,21 +55,11 @@ Alu_out alu(Alu_in alu_in){
 	else if (alu_in.alu_control == 8) result.alu_result = ((int32_t)alu_in.alu_in1 < (int32_t)alu_in.alu_in2) ? 1 : 0;  // slt, slti. signed
 	else if (alu_in.alu_control == 9) result.alu_result = (alu_in.alu_in1 < alu_in.alu_in2) ? 1 : 0;  // sltu, sltiu, unsigned
 	else if (alu_in.alu_control == 10) result.alu_result = alu_in.alu_in1 + alu_in.alu_in2;  // lui -> 0 + imm32
-	else 								result.alu_result = alu_in.alu_in1 + alu_in.alu_in2;
+	else 				result.alu_result = alu_in.alu_in1 + alu_in.alu_in2;
 	
-	//result.alu_zero = (result.alu_result == 0) ? 1 : 0;
-	//result.alu_sign = ((int32_t)result.alu_result >>31 ); 
-	
-//	if ((int32_t) result.alu_result == 0) result.alu_zero = 1;
-//	else 								  result.alu_zero = 0;
-//	
-//	if ((int32_t) result.alu_result < 0) result.alu_sign = 1;
-//	else								result.alu_sign = 0;
 	return result;
 	
 }
-
-
 
 
 Dmem_out dmem( Dmem_in dmem_in, uint32_t *dmem_data){  
@@ -81,4 +69,3 @@ Dmem_out dmem( Dmem_in dmem_in, uint32_t *dmem_data){
 	result.dmem_dout =  (dmem_in.mem_read ) ? dmem_in.dmem_data[dmem_in.dmem_addr] : 0; // load
 	return result;
 }
-
